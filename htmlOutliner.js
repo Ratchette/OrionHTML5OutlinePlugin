@@ -27,39 +27,26 @@ window.onload = function(){
 	var serviceImpl = {
 		getOutline: function(contents, title){
 			var outline = [];
-			
-			var html = "<a>text a</a><b id='x'>text b</b><c class='y'>text c</c><d id='z' class='w'><e>text e</e></d><g class='g h i'>hhh</g><yy>hellow</yy><yy id='secondyy'>world</yy>";
-			var dom = parseHTML(html);
-			
-			var id = Tautologistics.NodeHtmlParser.DomUtils.getElementById("x", dom);
-			outline.push({label: JSON.stringify(id, null, '\t'), line: 1});
-			
-			var classes = Tautologistics.NodeHtmlParser.DomUtils.getElements({ class: "y" }, dom);
-			outline.push({label: JSON.stringify(classes, null, '\t'), line: 1});
-			
-			var multiclass = Tautologistics.NodeHtmlParser.DomUtils.getElements({ class: function (value) { return(value && value.indexOf("h") > -1); } }, dom);
-			outline.push({label: JSON.stringify(multiclass, null, '\t'), line: 1});
+			var dom = parseHTML(document.getElementsByTagName('html')[0].innerHTML);
 					
-			var name = Tautologistics.NodeHtmlParser.DomUtils.getElementsByTagName("a", dom);
-			outline.push({label: JSON.stringify(name, null, '\t'), line: 1});
+			// the algorithm stuff
+					
+			var outlineTarget = null;
+			var section = null;
+			var stack = [];	
 			
-			var text = Tautologistics.NodeHtmlParser.DomUtils.getElementsByTagType("text", dom);
-			outline.push({label: JSON.stringify(text, null, '\t'), line: 1});
+			var root = null;
+		
+			dom.forEach(function(child){
+				if(child.name === "body"){
+					root = child;
+				}
+			});
 			
-			var nested = Tautologistics.NodeHtmlParser.DomUtils.getElements({ tag_name: "d", id: "z", class: "w" }, dom);
-			nested = Tautologistics.NodeHtmlParser.DomUtils.getElementsByTagName("e", nested);
-			outline.push({label: JSON.stringify(nested, null, '\t'), line: 1});
-			
-			nested = Tautologistics.NodeHtmlParser.DomUtils.getElementsByTagType("text", nested);
-			outline.push({label: JSON.stringify(nested, null, '\t'), line: 1});
-			
-			
-			var duplicates = Tautologistics.NodeHtmlParser.DomUtils.getElementsByTagName("yy", dom);
-			outline.push({label: JSON.stringify(duplicates, null, '\t'), line: 1});
-			
-			var single = Tautologistics.NodeHtmlParser.DomUtils.getElements( { tag_name: "yy", id: "secondyy" }, dom);
-			outline.push({label: JSON.stringify(single, null, '\t'), line: 1});
-
+			if(root === null){
+				root = dom;
+			}
+					
 			return outline;
 		}
 	};
@@ -98,19 +85,3 @@ function (root, enter, exit) {
 }
 
 */
-/*
-	var outline = [];
-    var lines = contents.split(/\r?\n/);
-	    
-    for (var i=0; i < lines.length; i++) {
-      var line = lines[i];
-      var match = /\s<\s*(.+?)\s*>/.exec(line);
-      if (match) {
-		outline.push({
-           label: match[1],
-           line: i+1  // lines are numbered from 1
-        });
-      }
-    }
-    return outline; 
- */
