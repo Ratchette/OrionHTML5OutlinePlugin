@@ -155,7 +155,7 @@ window.onload = function(){
 	
 	var outlineService = {
 		getOutline: function(contents, title) {
-			return buildOutline(contents, title, false);
+			return buildOutline(contents, title, true);
 		}
 	};
 	
